@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-python-app
+  labels:
+    app: sample-python-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sample-python-app
+  template:
+    metadata:
+      labels:
+        app: sample-python-app
+    spec:
+      containers:
+      - name: python-app
+        image: rushi/rushidemo:v1
+        env:
+       # - name: USERNAME
+       # valueFrom:
+       #   secretKeyRef:
+       #     name: mysecret
+       #     key: username
+       # - name: PASSWORD
+       # valueFrom:
+       #   secretKeyRef:
+       #     name: mysecret
+       #     key: password
+         - name: DB-PORT
+           valueFrom:
+              configMapKeyRef:
+                name: test-cm
+                key: db-port
+      #volumeMounts:
+      #- name: db-connection
+      #  mountPath: /opt
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8000
+      #volumes:
+       # - name: db-connection
+        #  configMap:
+         #   name: test-cm
